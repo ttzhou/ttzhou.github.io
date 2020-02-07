@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>the perceptron.</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- Mathjax Support -->
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</head>
+
+
+<body>
+    <nav>
+    
+    <a href="/">
+        About
+    </a>
+    
+    <a href="/blog">
+        Blog
+    </a>
+    
+</nav>
+
+    <h1>the perceptron.</h1>
+<h5>Feb 03 2020</h5>
+
+<div style="margin-top: 50px;">
+<p>My job doesn’t really allow me to use machine learning or use interesting mathematics in a way that I would like to. As such, to keep both my knowledge fresh and give me something to do, I’ve decided to write what essentially amounts to expositions of important topics in statistical learning.</p>
+
+<p>I find it most logical to start with one of the most basic machine learning algorithms: the perceptron. If you’re reading this, or any other of my “right” type posts (technical stuff) I generally assume basic understanding of linear algebra and probability, though I may elaborate on some of those details if it makes sense in the flow of things.</p>
+
+<p>Anyhoo…</p>
+
+<div style="margin-top: 50px;"></div>
+
+<h3 id="the-perceptron">The Perceptron</h3>
+
+<p>The perceptron is a classification algorithm that finds a separating hyperplane for data that can be linearly separated into two classes. That is, if the data can be represented as feature vectors <script type="math/tex">\mathcal{T} = \{\vec{x}_i \}_{i = 1}^{N} \subseteq \mathbb{R}^n</script>, and <script type="math/tex">y_i = f(x_i) \in \{-1, 1\}</script> represents the class of <script type="math/tex">\vec{x}_i</script>, then we are looking for <script type="math/tex">\vec{w} \in \mathbb{R}^n</script> such that</p>
+
+<script type="math/tex; mode=display">y_i \vec{w}^{T} \vec{x}_i > 0, \forall i</script>
+
+<p>Intuitively, we want <script type="math/tex">\vec{w}</script> so that the sign of <script type="math/tex">\vec{w}^{T} \vec{x}_i</script> (call this <script type="math/tex">\hat{y}_i</script>) always matches that of <script type="math/tex">y_i</script>, the <em>actual</em> label of <script type="math/tex">\vec{x}_i</script>, and that this works for all the given feature vectors <script type="math/tex">\vec{x}_i</script>.</p>
+
+<h4 id="the-algorithm"><strong>The Algorithm</strong></h4>
+
+<p>Assume that the dataset is linearly separable; that is,</p>
+
+<script type="math/tex; mode=display">\exists \vec{w}_*, ~~ \forall ~ \vec{x} \in \mathcal{T}, ~~ y_i \vec{w}_*^{T}\vec{x}_i > 0 \qquad (1)</script>
+
+<p>The perceptron algorithm finds a <script type="math/tex">\vec{w}</script> such that <script type="math/tex">\forall ~ \vec{x} \in \mathcal{T}, ~~ y_i \vec{w}^{T}\vec{x}_i > 0</script> in the following iterative manner:</p>
+
+<ol>
+  <li>
+    <p>Initialize <script type="math/tex">\vec{w}^{(1)} = \vec{0}</script>, and set iteration <script type="math/tex">k</script> to be 1.</p>
+  </li>
+  <li>At iteration <script type="math/tex">k</script>, for each vector <script type="math/tex">\vec{x}_i \in \mathcal{T}</script>, compute <script type="math/tex">y_i {\vec{w}^{(k)}}^{T} \vec{x}_i</script>.
+    <ul>
+      <li>If all such <script type="math/tex">y_i {\vec{w}^{(k)}}^{T} \vec{x}_i > 0</script>, then <script type="math/tex">\vec{w}^{(k)}</script> is an appropriate weight vector that separates the classes, and the algorithm terminates.</li>
+      <li>Otherwise, choose some <script type="math/tex">\vec{x}^{(k)}</script> where <script type="math/tex">y^{(k)} {\vec{w}^{(k)}}^{T} \vec{x}^{(k)} \leq 0</script>, and update <script type="math/tex">\vec{w}^{(k + 1)} = \vec{w}^{(k)} + y^{(k)} \vec{x}^{(k)}</script>.</li>
+    </ul>
+
+    <p>Increment iteration counter by 1 (set <script type="math/tex">k = k + 1</script>).</p>
+  </li>
+  <li>Repeat step 2 until there is a weight vector <script type="math/tex">\vec{w}^{(K)}</script> such that <script type="math/tex">y_i {\vec{w}^{(K)}}^{T} \vec{x}_{i} > 0</script>, for all <script type="math/tex">\vec{x}_i \in \mathcal{T}</script></li>
+</ol>
+
+<p>Intuitively, what this procedure is doing is:</p>
+
+<ul>
+  <li>If I classify a vector correctly, I’m doing good - don’t do anything to the weight vector</li>
+  <li>If I misclassify a vector, it means I need to pull the weight vector in the opposite direction it was going from the previous iteration. Then, I need to check everything all over again with the new weight vector.</li>
+</ul>
+
+<p>To prove that this algorithm works, it suffices to show that it terminates; more specifically, we show that <script type="math/tex">K</script>, the number of iterations, is finite.</p>
+
+<h4 id="proof-of-perceptron-algorithm"><strong>Proof of Perceptron Algorithm</strong></h4>
+
+<p>The idea of the (standard) proof is to show that as <script type="math/tex">\vec{w}^{(k)}</script> is successively updated through the iterations, the bound for the angle between it and <script type="math/tex">\vec{w}_*</script> gets closer to 0, and the rate at which this happens increases with <script type="math/tex">k</script>.</p>
+
+<p><em>Proof.</em></p>
+
+<p>Consider the weight vector after <script type="math/tex">k</script> iterations:</p>
+
+<script type="math/tex; mode=display">\vec{w}^{(k)} = \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)}</script>
+
+<p>Taking the dot product of both sides,</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &= \left( \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)} \right) \cdot \left( \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)} \right) \cr
+    &= {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + 2 y^{(k - 1)} \vec{w}^{(k - 1)} \cdot \vec{x}^{(k - 1)} + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &\leq {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2
+\end{align*} %]]></script>
+
+<p>as <script type="math/tex">2 y^{(k - 1)} \vec{w}^{(k - 1)} \cdot \vec{x}^{(k - 1)} \leq 0</script> since <script type="math/tex">\vec{w}^{(k - 1)}</script> misclassified <script type="math/tex">\vec{x}^{(k - 1)}</script>.</p>
+
+<p>Noting that we can repeat this process downwards for <script type="math/tex">k</script>, we get</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &\leq {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &\leq {\left\lVert \vec{w}^{(k - 2)} \right\rVert}^2 + \left\rVert y^{(k - 2)} \vec{x}^{(k - 2)} \right\rVert^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &\leq \vdots \cr
+    &\leq {\left\lVert \vec{w}^{(1)} \right\rVert}^2 + \left\rVert y^{(1)} \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &\leq \left\rVert y^{(1)} \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &\leq \left\rVert \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert \vec{x}^{(k - 1)} \right\rVert^2 \cr
+\end{align*} %]]></script>
+
+<p>since <script type="math/tex">\vec{w}^{(1)} = \vec{0}</script> and <script type="math/tex">\left\lVert y^{(i)} \right\rVert = 1, \forall i</script>.</p>
+
+<p>Let <script type="math/tex">R = \displaystyle \max_{\mathcal{T}} \left\lVert \vec{x}_i \right\rVert</script>. Then</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &\leq \left\rVert \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &\leq (k - 1)R^2 \cr
+    \left\lVert \vec{w}^{(k)} \right\rVert &\leq \sqrt{(k - 1)}R \qquad (2)
+\end{align*} %]]></script>
+
+<p>This gives an upper bound on the size of the weight vector at a given iteration.</p>
+
+<p>Now, express the angle between <script type="math/tex">\vec{w}_*</script> and <script type="math/tex">\vec{w}^{(k)}</script> using their dot product.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+    \vec{w}^{T}_* \vec{w}^{(k)} &= \vec{w}^{T} \vec{w}_*^{(k - 1)} + y^{(k - 1)} \vec{w}_*^{T}\vec{x}^{(k - 1)} \cr
+    &= \vec{w}^{T} \vec{w}_*^{(k - 2)} + y^{(k - 2)} \vec{w}_*^{T}\vec{x}^{(k - 2)} + y^{(k - 1)} \vec{w}_*^{T}\vec{x}^{(k - 1)} \cr
+    &= \vdots \cr
+    &= \vec{w}^{T} \vec{w}_*^{(1)} + y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{w}^{T}_* \vec{x}^{(k - 1)} \cr
+    &= y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{x}^{T}_* \vec{x}^{(k - 1)} \cr
+\end{align*} %]]></script>
+
+<p>Recall from <script type="math/tex">(1)</script> that <script type="math/tex">y_i \vec{w}^{T}_* x_i \gt 0, \forall i</script>. Then there must be some <script type="math/tex">\delta > 0</script> such that <script type="math/tex">y_i \vec{w}^{T}_* x_i \gt \delta, \forall i</script>, and hence</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+    \vec{w}^{T}_* \vec{w}^{(k)} &= y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{x}^{T}_* \vec{x}^{(k - 1)} \cr
+    &\geq (k - 1)\delta \cr
+
+    \left\lVert \vec{w}^{\phantom{(}}_* \right\rVert \left\lVert \vec{w}^{(k)} \right\rVert \cos{\theta^{(k)}} &\geq (k - 1)\delta \qquad (3)
+\end{align*} %]]></script>
+
+<p>where <script type="math/tex">\theta^{(k)}</script> is the angle between <script type="math/tex">\vec{w}_*</script> and <script type="math/tex">\vec{w}^{(k)}</script>.</p>
+
+<p>Without loss of generality, we can say that <script type="math/tex">\vec{w}_*</script> is a unit vector. Then, from <script type="math/tex">(2)</script> and <script type="math/tex">(3)</script>,</p>
+
+<script type="math/tex; mode=display">\cos{\theta^{(k)}} \geq \tfrac{(k - 1)\delta}{\left\lVert \vec{w}^{(k)} \right\rVert} \geq \tfrac{(k - 1)\delta}{\sqrt{(k - 1)}R} = \sqrt{k - 1}\tfrac{\delta}{R}</script>
+
+<p>Thus, <script type="math/tex">\sqrt{k - 1} \tfrac{\delta}{R} \leq \cos{\theta^{(k)}} \leq 1</script>; rearranging for <script type="math/tex">k</script> gives <script type="math/tex">k \leq \tfrac{R^2}{\delta^2} + 1</script>, which is a bound for the number of iterations the algorithm can take.</p>
+
+<p>Therefore, the algorithm must terminate, and it can only terminate once the final weight vector correctly classifies all the points. <script type="math/tex">\tag*{$\blacksquare$}</script></p>
+
+<h4 id="limitations-of-the-perceptron"><strong>Limitations of the Perceptron</strong></h4>
+
+</div>
+
+    <footer>
+    
+    <a href="mailto:tim.zhou.55@gmail.com">
+        
+            <svg class="icon"><use xlink:href='#fas.fa-envelope'></use></svg>
+        
+        email
+    </a>
+    
+    <a href="https://github.com/ttzhou">
+        
+            <svg class="icon"><use xlink:href='#fab.fa-github'></use></svg>
+        
+        github
+    </a>
+    
+    <a href="https://www.linkedin.com/in/tim-zhou-0b2a1742/">
+        
+            <svg class="icon"><use xlink:href='#fab.fa-linkedin'></use></svg>
+        
+        linkedin
+    </a>
+    
+</footer>
+
+    <svg display="none" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                  <!--
+                  Font Awesome Free 5.5.0 by @fontawesome - https://fontawesome.com
+                  License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+                  -->
+              <symbol id='fas.fa-envelope' viewBox='0 0 512 512'>
+            <title>envelope</title>
+            <path class='path1' d='M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z'></path>
+        </symbol>
+        <symbol id='fab.fa-github' viewBox='0 0 496 512'>
+            <title>github</title>
+            <path class='path1' d='M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z'></path>
+        </symbol>
+        <symbol id='fab.fa-linkedin' viewBox='0 0 448 512'>
+            <title>linkedin</title>
+            <path class='path1' d='M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z'></path>
+        </symbol>
+        </defs>
+              </svg>
+
+</body>
+</html>
+
