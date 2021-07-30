@@ -40,33 +40,33 @@
 
 <h3 id="the-perceptron">The Perceptron</h3>
 
-<p>The perceptron is a classification algorithm that finds a separating hyperplane for data that can be linearly separated into two classes. That is, if the data can be represented as feature vectors <script type="math/tex">\mathcal{T} = \{\vec{x}_i \}_{i = 1}^{N} \subseteq \mathbb{R}^n</script>, and <script type="math/tex">y_i = f(x_i) \in \{-1, 1\}</script> represents the class of <script type="math/tex">\vec{x}_i</script>, then we are looking for <script type="math/tex">\vec{w} \in \mathbb{R}^n</script> such that</p>
+<p>The perceptron is a classification algorithm that finds a separating hyperplane for data that can be linearly separated into two classes. That is, if the data can be represented as feature vectors \(\mathcal{T} = \{\vec{x}_i \}_{i = 1}^{N} \subseteq \mathbb{R}^n\), and \(y_i = f(x_i) \in \{-1, 1\}\) represents the class of \(\vec{x}_i\), then we are looking for \(\vec{w} \in \mathbb{R}^n\) such that</p>
 
-<script type="math/tex; mode=display">y_i \vec{w}^{T} \vec{x}_i > 0, \forall i</script>
+\[y_i \vec{w}^{T} \vec{x}_i &gt; 0, \forall i\]
 
-<p>Intuitively, we want <script type="math/tex">\vec{w}</script> so that the sign of <script type="math/tex">\vec{w}^{T} \vec{x}_i</script> (call this <script type="math/tex">\hat{y}_i</script>) always matches that of <script type="math/tex">y_i</script>, the <em>actual</em> label of <script type="math/tex">\vec{x}_i</script>, and that this works for all the given feature vectors <script type="math/tex">\vec{x}_i</script>.</p>
+<p>Intuitively, we want \(\vec{w}\) so that the sign of \(\vec{w}^{T} \vec{x}_i\) (call this \(\hat{y}_i\)) always matches that of \(y_i\), the <em>actual</em> label of \(\vec{x}_i\), and that this works for all the given feature vectors \(\vec{x}_i\).</p>
 
 <h4 id="the-algorithm"><strong>The Algorithm</strong></h4>
 
 <p>Assume that the dataset is linearly separable; that is,</p>
 
-<script type="math/tex; mode=display">\exists \vec{w}_*, ~~ \forall ~ \vec{x} \in \mathcal{T}, ~~ y_i \vec{w}_*^{T}\vec{x}_i > 0 \qquad (1)</script>
+\[\exists \vec{w}_*, ~~ \forall ~ \vec{x} \in \mathcal{T}, ~~ y_i \vec{w}_*^{T}\vec{x}_i &gt; 0 \qquad (1)\]
 
-<p>The perceptron algorithm finds a <script type="math/tex">\vec{w}</script> such that <script type="math/tex">\forall ~ \vec{x} \in \mathcal{T}, ~~ y_i \vec{w}^{T}\vec{x}_i > 0</script> in the following iterative manner:</p>
+<p>The perceptron algorithm finds a \(\vec{w}\) such that \(\forall ~ \vec{x} \in \mathcal{T}, ~~ y_i \vec{w}^{T}\vec{x}_i &gt; 0\) in the following iterative manner:</p>
 
 <ol>
   <li>
-    <p>Initialize <script type="math/tex">\vec{w}^{(1)} = \vec{0}</script>, and set iteration <script type="math/tex">k</script> to be 1.</p>
+    <p>Initialize \(\vec{w}^{(1)} = \vec{0}\), and set iteration \(k\) to be 1.</p>
   </li>
-  <li>At iteration <script type="math/tex">k</script>, for each vector <script type="math/tex">\vec{x}_i \in \mathcal{T}</script>, compute <script type="math/tex">y_i {\vec{w}^{(k)}}^{T} \vec{x}_i</script>.
+  <li>At iteration \(k\), for each vector \(\vec{x}_i \in \mathcal{T}\), compute \(y_i {\vec{w}^{(k)}}^{T} \vec{x}_i\).
     <ul>
-      <li>If all such <script type="math/tex">y_i {\vec{w}^{(k)}}^{T} \vec{x}_i > 0</script>, then <script type="math/tex">\vec{w}^{(k)}</script> is an appropriate weight vector that separates the classes, and the algorithm terminates.</li>
-      <li>Otherwise, choose some <script type="math/tex">\vec{x}^{(k)}</script> where <script type="math/tex">y^{(k)} {\vec{w}^{(k)}}^{T} \vec{x}^{(k)} \leq 0</script>, and update <script type="math/tex">\vec{w}^{(k + 1)} = \vec{w}^{(k)} + y^{(k)} \vec{x}^{(k)}</script>.</li>
+      <li>If all such \(y_i {\vec{w}^{(k)}}^{T} \vec{x}_i &gt; 0\), then \(\vec{w}^{(k)}\) is an appropriate weight vector that separates the classes, and the algorithm terminates.</li>
+      <li>Otherwise, choose some \(\vec{x}^{(k)}\) where \(y^{(k)} {\vec{w}^{(k)}}^{T} \vec{x}^{(k)} \leq 0\), and update \(\vec{w}^{(k + 1)} = \vec{w}^{(k)} + y^{(k)} \vec{x}^{(k)}\).</li>
     </ul>
 
-    <p>Increment iteration counter by 1 (set <script type="math/tex">k = k + 1</script>).</p>
+    <p>Increment iteration counter by 1 (set \(k = k + 1\)).</p>
   </li>
-  <li>Repeat step 2 until there is a weight vector <script type="math/tex">\vec{w}^{(K)}</script> such that <script type="math/tex">y_i {\vec{w}^{(K)}}^{T} \vec{x}_{i} > 0</script>, for all <script type="math/tex">\vec{x}_i \in \mathcal{T}</script></li>
+  <li>Repeat step 2 until there is a weight vector \(\vec{w}^{(K)}\) such that \(y_i {\vec{w}^{(K)}}^{T} \vec{x}_{i} &gt; 0\), for all \(\vec{x}_i \in \mathcal{T}\)</li>
 </ol>
 
 <p>Intuitively, what this procedure is doing is:</p>
@@ -76,89 +76,124 @@
   <li>If I misclassify a vector, it means I need to pull the weight vector in the opposite direction it was going from the previous iteration. Then, I need to check everything all over again with the new weight vector.</li>
 </ul>
 
-<p>To prove that this algorithm works, it suffices to show that it terminates; more specifically, we show that <script type="math/tex">K</script>, the number of iterations, is finite.</p>
+<p>To prove that this algorithm works, it suffices to show that it terminates; more specifically, we show that \(K\), the number of iterations, is finite.</p>
 
 <h4 id="proof-of-perceptron-algorithm"><strong>Proof of Perceptron Algorithm</strong></h4>
 
-<p>The idea of the (standard) proof is to show that as <script type="math/tex">\vec{w}^{(k)}</script> is successively updated through the iterations, the bound for the angle between it and <script type="math/tex">\vec{w}_*</script> gets closer to 0, and the rate at which this happens increases with <script type="math/tex">k</script>.</p>
+<p>The idea of the (standard) proof is to show that as \(\vec{w}^{(k)}\) is successively updated through the iterations, the bound for the angle between it and \(\vec{w}_*\) gets closer to 0, and the rate at which this happens increases with \(k\).</p>
 
 <p><em>Proof.</em></p>
 
-<p>Consider the weight vector after <script type="math/tex">k</script> iterations:</p>
+<p>Consider the weight vector after \(k\) iterations:</p>
 
-<script type="math/tex; mode=display">\vec{w}^{(k)} = \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)}</script>
+\[\vec{w}^{(k)} = \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)}\]
 
 <p>Taking the dot product of both sides,</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-    \left\lVert \vec{w}^{(k)} \right\rVert^2 &= \left( \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)} \right) \cdot \left( \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)} \right) \cr
-    &= {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + 2 y^{(k - 1)} \vec{w}^{(k - 1)} \cdot \vec{x}^{(k - 1)} + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
-    &\leq {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2
-\end{align*} %]]></script>
+\[\begin{align*}
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &amp;= \left( \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)} \right) \cdot \left( \vec{w}^{(k - 1)} + y^{(k - 1)} \vec{x}^{(k - 1)} \right) \cr
+    &amp;= {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + 2 y^{(k - 1)} \vec{w}^{(k - 1)} \cdot \vec{x}^{(k - 1)} + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &amp;\leq {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2
+\end{align*}\]
 
-<p>as <script type="math/tex">2 y^{(k - 1)} \vec{w}^{(k - 1)} \cdot \vec{x}^{(k - 1)} \leq 0</script> since <script type="math/tex">\vec{w}^{(k - 1)}</script> misclassified <script type="math/tex">\vec{x}^{(k - 1)}</script>.</p>
+<p>as \(2 y^{(k - 1)} \vec{w}^{(k - 1)} \cdot \vec{x}^{(k - 1)} \leq 0\) since \(\vec{w}^{(k - 1)}\) misclassified \(\vec{x}^{(k - 1)}\).</p>
 
-<p>Noting that we can repeat this process downwards for <script type="math/tex">k</script>, we get</p>
+<p>Noting that we can repeat this process downwards for \(k\), we get</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-    \left\lVert \vec{w}^{(k)} \right\rVert^2 &\leq {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
-    &\leq {\left\lVert \vec{w}^{(k - 2)} \right\rVert}^2 + \left\rVert y^{(k - 2)} \vec{x}^{(k - 2)} \right\rVert^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
-    &\leq \vdots \cr
-    &\leq {\left\lVert \vec{w}^{(1)} \right\rVert}^2 + \left\rVert y^{(1)} \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
-    &\leq \left\rVert y^{(1)} \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
-    &\leq \left\rVert \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert \vec{x}^{(k - 1)} \right\rVert^2 \cr
-\end{align*} %]]></script>
+\[\begin{align*}
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &amp;\leq {\left\lVert \vec{w}^{(k - 1)} \right\rVert}^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &amp;\leq {\left\lVert \vec{w}^{(k - 2)} \right\rVert}^2 + \left\rVert y^{(k - 2)} \vec{x}^{(k - 2)} \right\rVert^2 + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &amp;\leq \vdots \cr
+    &amp;\leq {\left\lVert \vec{w}^{(1)} \right\rVert}^2 + \left\rVert y^{(1)} \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &amp;\leq \left\rVert y^{(1)} \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert y^{(k - 1)} \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    &amp;\leq \left\rVert \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert \vec{x}^{(k - 1)} \right\rVert^2 \cr
+\end{align*}\]
 
-<p>since <script type="math/tex">\vec{w}^{(1)} = \vec{0}</script> and <script type="math/tex">\left\lVert y^{(i)} \right\rVert = 1, \forall i</script>.</p>
+<p>since \(\vec{w}^{(1)} = \vec{0}\) and \(\left\lVert y^{(i)} \right\rVert = 1, \forall i\).</p>
 
-<p>Let <script type="math/tex">R = \displaystyle \max_{\mathcal{T}} \left\lVert \vec{x}_i \right\rVert</script>. Then</p>
+<p>Let \(R = \displaystyle \max_{\mathcal{T}} \left\lVert \vec{x}_i \right\rVert\). Then</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-    \left\lVert \vec{w}^{(k)} \right\rVert^2 &\leq \left\rVert \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert \vec{x}^{(k - 1)} \right\rVert^2 \cr
-    \left\lVert \vec{w}^{(k)} \right\rVert^2 &\leq (k - 1)R^2 \cr
-    \left\lVert \vec{w}^{(k)} \right\rVert &\leq \sqrt{(k - 1)}R \qquad (2)
-\end{align*} %]]></script>
+\[\begin{align*}
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &amp;\leq \left\rVert \vec{x}^{(1)} \right\rVert^2 + \ldots + \left\rVert \vec{x}^{(k - 1)} \right\rVert^2 \cr
+    \left\lVert \vec{w}^{(k)} \right\rVert^2 &amp;\leq (k - 1)R^2 \cr
+    \left\lVert \vec{w}^{(k)} \right\rVert &amp;\leq \sqrt{(k - 1)}R \qquad (2)
+\end{align*}\]
 
 <p>This gives an upper bound on the size of the weight vector at a given iteration.</p>
 
-<p>Now, express the angle between <script type="math/tex">\vec{w}_*</script> and <script type="math/tex">\vec{w}^{(k)}</script> using their dot product.</p>
+<p>Now, express the angle between \(\vec{w}_*\) and \(\vec{w}^{(k)}\) using their dot product.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-    \vec{w}^{T}_* \vec{w}^{(k)} &= \vec{w}^{T} \vec{w}_*^{(k - 1)} + y^{(k - 1)} \vec{w}_*^{T}\vec{x}^{(k - 1)} \cr
-    &= \vec{w}^{T} \vec{w}_*^{(k - 2)} + y^{(k - 2)} \vec{w}_*^{T}\vec{x}^{(k - 2)} + y^{(k - 1)} \vec{w}_*^{T}\vec{x}^{(k - 1)} \cr
-    &= \vdots \cr
-    &= \vec{w}^{T} \vec{w}_*^{(1)} + y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{w}^{T}_* \vec{x}^{(k - 1)} \cr
-    &= y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{x}^{T}_* \vec{x}^{(k - 1)} \cr
-\end{align*} %]]></script>
+\[\begin{align*}
+    \vec{w}^{T}_* \vec{w}^{(k)} &amp;= \vec{w}^{T} \vec{w}_*^{(k - 1)} + y^{(k - 1)} \vec{w}_*^{T}\vec{x}^{(k - 1)} \cr
+    &amp;= \vec{w}^{T} \vec{w}_*^{(k - 2)} + y^{(k - 2)} \vec{w}_*^{T}\vec{x}^{(k - 2)} + y^{(k - 1)} \vec{w}_*^{T}\vec{x}^{(k - 1)} \cr
+    &amp;= \vdots \cr
+    &amp;= \vec{w}^{T} \vec{w}_*^{(1)} + y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{w}^{T}_* \vec{x}^{(k - 1)} \cr
+    &amp;= y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{x}^{T}_* \vec{x}^{(k - 1)} \cr
+\end{align*}\]
 
-<p>Recall from <script type="math/tex">(1)</script> that <script type="math/tex">y_i \vec{w}^{T}_* x_i \gt 0, \forall i</script>. Then there must be some <script type="math/tex">\delta > 0</script> such that <script type="math/tex">y_i \vec{w}^{T}_* x_i \gt \delta, \forall i</script>, and hence</p>
+<p>Recall from \((1)\) that \(y_i \vec{w}^{T}_* x_i \gt 0, \forall i\). Then there must be some \(\delta &gt; 0\) such that \(y_i \vec{w}^{T}_* x_i \gt \delta, \forall i\), and hence</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-    \vec{w}^{T}_* \vec{w}^{(k)} &= y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{x}^{T}_* \vec{x}^{(k - 1)} \cr
-    &\geq (k - 1)\delta \cr
+\[\begin{align*}
+    \vec{w}^{T}_* \vec{w}^{(k)} &amp;= y^{(1)} \vec{w}_*^{T}\vec{x}^{(1)} + \ldots + y^{(k - 1)} \vec{x}^{T}_* \vec{x}^{(k - 1)} \cr
+    &amp;\geq (k - 1)\delta \cr
 
-    \left\lVert \vec{w}^{\phantom{(}}_* \right\rVert \left\lVert \vec{w}^{(k)} \right\rVert \cos{\theta^{(k)}} &\geq (k - 1)\delta \qquad (3)
-\end{align*} %]]></script>
+    \left\lVert \vec{w}^{\phantom{(}}_* \right\rVert \left\lVert \vec{w}^{(k)} \right\rVert \cos{\theta^{(k)}} &amp;\geq (k - 1)\delta \qquad (3)
+\end{align*}\]
 
-<p>where <script type="math/tex">\theta^{(k)}</script> is the angle between <script type="math/tex">\vec{w}_*</script> and <script type="math/tex">\vec{w}^{(k)}</script>.</p>
+<p>where \(\theta^{(k)}\) is the angle between \(\vec{w}_*\) and \(\vec{w}^{(k)}\).</p>
 
-<p>Without loss of generality, we can say that <script type="math/tex">\vec{w}_*</script> is a unit vector. Then, from <script type="math/tex">(2)</script> and <script type="math/tex">(3)</script>,</p>
+<p>Without loss of generality, we can say that \(\vec{w}_*\) is a unit vector. Then, from \((2)\) and \((3)\),</p>
 
-<script type="math/tex; mode=display">\cos{\theta^{(k)}} \geq \tfrac{(k - 1)\delta}{\left\lVert \vec{w}^{(k)} \right\rVert} \geq \tfrac{(k - 1)\delta}{\sqrt{(k - 1)}R} = \sqrt{k - 1}\tfrac{\delta}{R}</script>
+\[\cos{\theta^{(k)}} \geq \tfrac{(k - 1)\delta}{\left\lVert \vec{w}^{(k)} \right\rVert} \geq \tfrac{(k - 1)\delta}{\sqrt{(k - 1)}R} = \sqrt{k - 1}\tfrac{\delta}{R}\]
 
-<p>Thus, <script type="math/tex">\sqrt{k - 1} \tfrac{\delta}{R} \leq \cos{\theta^{(k)}} \leq 1</script>; rearranging for <script type="math/tex">k</script> gives <script type="math/tex">k \leq \tfrac{R^2}{\delta^2} + 1</script>, which is a bound for the number of iterations the algorithm can take.</p>
+<p>Thus, \(\sqrt{k - 1} \tfrac{\delta}{R} \leq \cos{\theta^{(k)}} \leq 1\); rearranging for \(k\) gives \(k \leq \tfrac{R^2}{\delta^2} + 1\), which is a bound for the number of iterations the algorithm can take.</p>
 
-<p>Therefore, the algorithm must terminate, and it can only terminate once the final weight vector correctly classifies all the points. <script type="math/tex">\tag*{$\blacksquare$}</script></p>
+<p>Therefore, the algorithm must terminate, and it can only terminate once the final weight vector correctly classifies all the points. \(\tag*{$\blacksquare$}\)</p>
 
 <h4 id="limitations-of-the-perceptron"><strong>Limitations of the Perceptron</strong></h4>
 
-<p>TODO</p>
+<p>The first published paper on the perceptron does not coincide with the first person who thought of the idea. Nevertheless, the seminal paper was written by Frank Rosenblatt while working at the Cornell Aeronautical Laboratory <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. It came at a time when AI was a nascent field; as with any nascent field, initial discoveries and breakthroughs often contributed to an excessive optimism in what was possible (similar to where we are now in the AI landscape).</p>
 
+<p>As we will see, however, the perceptron (as a proxy for this optimism) would be found to have some serious limitations. The key limitation can be found in the proof itself - the assumption that some \(\omega_{*}\) exists which can linearly separate the classes. There are of course cases where this is not true. To make this concrete, we illustrate the “canonical” counterexample.</p>
+
+<p>Consider four points in \(\mathbb{R^2}\); \(\{ (x_1, x_2) \} = \{ (0, 0), (0, 1), (1, 0), (1, 1) \}\), and let</p>
+
+\[f(\vec{x}) = \begin{cases} 1 &amp; \text{if } \min{(x, y)} = 0 \\ -1 &amp; \text{otherwise} \end{cases}\]
+
+<p>Below, points with class \(1\) are colored blue, and those with class \(-1\) are colored red (these images were created using <a href="https://www.geogebra.org/?lang=en" style="text-decoration: none">Geogebra</a>).</p>
+
+<p><img src="/assets/media/img/perceptron_2D_XOR.png" alt="test" height="450px" width="500px" /></p>
+
+<p>We can see from this image that there is no way to draw a line that separates the two classes. Thus, the perceptron algorithm would fail here, but a human would easily be able to see the <em>rule</em> that separates the two classes. The problem here is that the rule is not a linear divider.</p>
+
+<p>However, if we change our <em>perspective</em> on the problem, then a linear boundary becomes available. To see how this is done, note that the image shown appears to be two-dimensional.</p>
+
+<p>If we instead view it as a plane in three dimensions \(\left( \mathbb{R}^3 \right)\), by adding a third coordinate, \(x_3\):</p>
+
+<p><img src="/assets/media/img/perceptron_3D_XOR_1.png" alt="test" height="450px" width="500px" /></p>
+
+<p>and rotate our view of the space like so:</p>
+
+<p><img src="/assets/media/img/perceptron_3D_XOR_2.png" alt="test" height="450px" width="500px" /></p>
+
+<p>we can see that a linear divider is indeed possible; one such divider is the plane defined by \(2x_3 - x_1 - x_2 + \tfrac{1}{2} = 0\):</p>
+
+<p><img src="/assets/media/img/perceptron_3D_XOR_3.png" alt="test" height="450px" width="500px" /></p>
+
+<p>The adding of a third coordinate to our samples is akin to adding a new feature to the feature vectors comprising our inputs.
+ This process of adding features is known as <em>feature engineering</em>, and is an essential tool in improving the performance of classifiers (and machine learning models in general). Furthermore, setting machine learning aside completely, the general technique of adding information that can change our perspective on a problem, is a great principle to apply to solving any problem in general!</p>
+
+<div style="margin-top:100px;"></div>
+
+<h3 id="references">References</h3>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p><em>Perceptron</em> - Wikipedia. https://en.wikipedia.org/wiki/Perceptron <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
 </div>
 
@@ -210,4 +245,3 @@
 
 </body>
 </html>
-
